@@ -1,0 +1,24 @@
+---
+all:
+  vars:
+    # use this section to enter GCP related information
+    zone: europe-west2-c
+    region: europe-west2
+    project_id: kubernets-cluster-335010
+    gcloud_sa_path: "/credenciaisGCP/kubernets-cluster-335010-41a48ffef02d.json"
+    credentials_file: "{{ lookup('env','HOME') }}/{{ gcloud_sa_path }}"
+    gcloud_service_account: kubernets@kubernets-cluster-335010.iam.gserviceaccount.com
+
+    # use the section below to enter k8s cluster related information
+    cluster_name: kubernets-cluster
+    initial_node_count: 1
+    disk_size_gb: 20
+    disk_type: pd-ssd
+    machine_type: n1-standard-2
+
+    # credenciais base de dados
+    ROOT: cm9vdA==
+    ROOT_PASSWORD: U3Ryb25nUm9vdFBhc3N3b3Jk
+    DATABASE: d2lraWpz
+    USER: d2lraWpz
+    PASSWORD: U3Ryb25nVXNlclBhc3N3b3Jk

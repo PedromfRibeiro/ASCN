@@ -1,0 +1,127 @@
+
+
+
+- name: Deploy the Database
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: mariadb
+        namespace: wikijs
+        labels:
+          app: mariadb
+      spec:
+        selector:
+          matchLabels:
+            app: mariadb
+        template:
+          metadata:
+            labels:
+              app: mariadb
+          spec:
+            containers:
+            - name: mariadb
+              image: mariadb:10.4
+              env:
+              - name: MYSQL_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: ROOT_PASSWORD
+              - name: MYSQL_DATABASE
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: DATABASE
+              - name: MYSQL_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: USER
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: PASSWORD
+              ports:
+              - containerPort: 3306
+                name: mysql
+              volumeMounts:
+              - name: mariadb-storage
+                mountPath: /var/lib/mysql
+            volumes:
+            - name: mariadb-storage
+              hostPath:
+                path: /var/wikijs
+                type: Directory
+
+
+- name: Deploy the Wiki.js Service as NodePort
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: "wikijs"
+        namespace: wikijs
+      spec:
+        type: NodePort
+        ports:
+          - name: http
+            port: 3000
+        selector:
+          app: "wikijs"
+
+
+- name: Deploy the Wiki.js aplication
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: wikijs
+        namespace: wikijs
+        labels:
+          app: wikijs
+      spec:
+        selector:
+          matchLabels:
+            app: wikijs
+        template:
+          metadata:
+            labels:
+              app: wikijs
+          spec:
+            containers:
+            - name: wikijs
+              image: requarks/wiki:beta
+              imagePullPolicy: Always
+              env:
+              - name: DB_TYPE
+                value: "mariadb"
+              - name: DB_HOST
+                value: "mariadb"
+              - name: DB_PORT
+                value: "3306"
+              - name: DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: DATABASE
+              - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: USER
+              - name: DB_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: PASSWORD
+              ports:
+              - containerPort: 3000
+                name: http

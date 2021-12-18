@@ -1,0 +1,139 @@
+
+------------------------------------------------------------------------------
+
+Ponto da situação:
+    
+    -> O pod não fica ready : quando correr kubectl get pod -n wikijs o pod está no estado 0/1 de ready
+
+    Troubleshooting Pods: https://learnk8s.io/troubleshooting-deployments
+
+    rever o que diz a mensagem quanddo corro o comando : kubectl get pod -n wikijs
+    rever o código de implementação do wiki.js. verificar se está igual
+
+------------------------------------------------------------------------------
+
+Instalações necessárias (macOs):
+
+1. Usar os comandos do gcloud no terminal da minha máquina
+brew install --cask google-cloud-sdk
+
+
+2. brew install kubectl 
+
+gcloud components install kubectl
+
+
+
+Caso não consiga conectar ao cluster kubernets tenho de fazer primeiro : gcloud auth login
+
+
+------------------------------------------------------------------------------
+
+Por fazer:
+
+Perceber como usar o secret para guardar os dados da base de dados
+https://cloud.google.com/kubernetes-engine/docs/concepts/secret#yaml-file
+
+Enable and disable service API pelo ansible
+
+Task para destruir o cluster
+
+Escolher zona e região para gastar menos recursos
+
+
+------------------------------------------------------------------------------
+
+Para Testar
+
+1. Enable service accounts
+
+2. Enable this API s
+https://console.cloud.google.com/apis/library/cloudfunctions.googleapis.com?project=kubernets-cluster-335010
+https://console.cloud.google.com/apis/library/compute.googleapis.com?project=kubernets-cluster-335010
+https://console.cloud.google.com/apis/library/container.googleapis.com?project=kubernets-cluster-335010
+
+
+3. Correr o playbook para criação do cluster kubernets
+ansible-playbook ansible/create-k8s.yaml -i ansible/inventory/gcp.yaml 
+
+
+Quando não precisar: 
+1. desactivar a service account
+2. Desactivar as APIs
+3. Destruir o cluster
+
+------------------------------------------------------------------------------
+
+
+Executar a script com os requisitos necessários. Correr o seguinte comando:
+    bash requisitos.sh
+
+Necessário guardar as credenciais em /Users/[User]
+
+
+
+Necessário automatizar o seguinte (TIVE QUE FAZER À MÃO!!!)
+
+Enable Computer Engine API
+https://console.cloud.google.com/apis/library/compute.googleapis.com?project=kubernets-cluster-335010
+
+Enable Kubernets Engine API
+https://console.cloud.google.com/apis/library/container.googleapis.com?project=kubernets-cluster-335010
+
+
+deploy app in Kubernets 
+https://faun.pub/automation-deploying-an-app-in-gke-using-ansible-4b6687967ac3
+
+
+
+No nome das variáveis não usar o simbolo '_' dá um erro: "... Must be a match of regex ..."
+https://github.com/hashicorp/terraform/issues/20884
+
+
+Load balancer on gke
+https://medium.com/google-cloud/choosing-the-right-load-balancer-9ec909148a85
+https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
+https://cloud.google.com/kubernetes-engine/docs/concepts/ingress
+https://medium.com/google-cloud/container-load-balancing-on-google-kubernetes-engine-gke-4cbfaa80a6f6
+
+
+Escalabilidade com partitioning
+https://dzone.com/articles/distributed-balanced-partition-queues-assignment-u
+
+
+Definir variáveis de ambliente de containers usando Secret data
+https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/
+https://stackoverflow.com/questions/59203583/how-can-i-create-a-kubernetes-secret-with-ansible
+
+
+Deploy wiki-js on kubernets
+https://paranoiaque.fr/en/2019/07/04/wiki-js-and-kubernetes/
+https://computingforgeeks.com/install-and-configure-wikijs-on-kubernetes-cluster/
+
+
+Optimizar o processo de testing
+https://blog.container-solutions.com/how-to-create-a-kubernetes-cluster-in-under-60-seconds
+
+
+Resize Cluster Kubernets
+https://serverfault.com/questions/966370/how-to-stop-hibernate-gke-cluster-in-gcp
+
+
+
+
+------------------------------------------------------------------------------
+Codigo aux:
+
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: testing
+    api_version: v1
+    kind: Namespace
+    auth_kind: serviceaccount    
+    service_account_file: "{{ credentials_file }}"    
+    state: present
+
+
+
+
