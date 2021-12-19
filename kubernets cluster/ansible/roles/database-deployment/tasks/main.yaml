@@ -84,25 +84,30 @@
               ports:
               - containerPort: 3306
                 name: mysql
-       
 
 
-- name: Deploy the Wiki.js Service as NodePort
+- name: Deploy the Wiki.js as external service with LoadBalancer
   kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: v1
       kind: Service
       metadata:
-        name: "wikijs"
+        name: wikijs
+        annotations:
+        # Required to assign internal IP address
+        cloud.google.com/load-balancer-type: "Internal"
+        # Required to enable global access
+        networking.gke.io/internal-load-balancer-allow-global-access: "true"
         namespace: wikijs
       spec:
-        type: NodePort
+        type: LoadBalancer
         ports:
-          - name: http
-            port: 3000
+        - port: 80
+          targetPort: 8080
         selector:
-          app: "wikijs"
+          app: wikijs
+
 
 
 - name: Deploy the Wiki.js aplication
@@ -154,6 +159,7 @@
                     name: postgres-secret
                     key: PASSWORD
               ports:
-              - containerPort: 3000
+              - containerPort: 8080
                 name: http
+
 
