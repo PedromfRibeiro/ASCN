@@ -27,6 +27,32 @@ gcloud components install kubectl
 Caso não consiga conectar ao cluster kubernets tenho de fazer primeiro : gcloud auth login
 
 
+Para conseguir correr imagens nos containers preciso de colocar as imagens no gcr relativas ao meu projecto.
+
+Instalar o docker [ macOS ]: https://apple.stackexchange.com/questions/373888/how-do-i-start-the-docker-daemon-on-macos
+
+Copiar as imagens dos containers que preciso para o gcr do meu projecto
+https://www.youtube.com/watch?v=9CDb9ZSsfV4
+
+    Passo1: docker pull postgres:latest
+            docker pull requarks/wiki:latest
+    Passo2: 
+    gcloud auth configure-docker
+    docker tag postgres gcr.io/kubernets-cluster-335010/postgres
+    docker push gcr.io/kubernets-cluster-335010/postgres
+
+aux: https://cloud.google.com/container-registry/docs/advanced-authentication#gcloud-helper
+https://www.cloudsavvyit.com/4866/how-to-push-and-pull-docker-images-from-google-container-registry/
+deploy images in gke:
+https://cloud.google.com/run/docs/deploying#yaml_1
+
+
+Resolver o problema dos containers não ficar running [por default após a criação do container, esse container para de correr]:
+https://stackoverflow.com/questions/31870222/how-can-i-keep-a-container-running-on-kubernetes
+
+aux: https://coderedirect.com/questions/518084/gke-cluster-cant-pull-errimagepull-from-gcr-registry-in-same-project-gitlab
+
+
 ------------------------------------------------------------------------------
 
 Por fazer:
@@ -36,9 +62,15 @@ https://cloud.google.com/kubernetes-engine/docs/concepts/secret#yaml-file
 
 Enable and disable service API pelo ansible
 
-Task para destruir o cluster
+Tasks para destruir o cluster:
+https://faun.pub/automation-deploying-an-app-in-gke-using-ansible-4b6687967ac3
+
 
 Escolher zona e região para gastar menos recursos
+
+Ver o que fazer com o ficheiro credenciais
+Copiar as credenciais para a minha máquina usando o ansible
+
 
 
 ------------------------------------------------------------------------------
@@ -51,10 +83,11 @@ Para Testar
 https://console.cloud.google.com/apis/library/cloudfunctions.googleapis.com?project=kubernets-cluster-335010
 https://console.cloud.google.com/apis/library/compute.googleapis.com?project=kubernets-cluster-335010
 https://console.cloud.google.com/apis/library/container.googleapis.com?project=kubernets-cluster-335010
-
+https://console.cloud.google.com/apis/library/containerregistry.googleapis.com?_ga=2.185140780.444318743.1639776243-91976998.1639340631&_gac=1.204811812.1639602358.EAIaIQobChMIz_rjmNvm9AIV_4FQBh2MuwbaEAAYASAAEgKsPfD_BwE&project=kubernets-cluster-335010
 
 3. Correr o playbook para criação do cluster kubernets
 ansible-playbook ansible/create-k8s.yaml -i ansible/inventory/gcp.yaml 
+ps: Em linux fazer sudo antes do comando ansible-playbook
 
 
 Quando não precisar: 
@@ -119,6 +152,8 @@ Resize Cluster Kubernets
 https://serverfault.com/questions/966370/how-to-stop-hibernate-gke-cluster-in-gcp
 
 
+Container Register [ contém as imagens dos containers disponíveis ]
+https://console.cloud.google.com/gcr/images/google-containers/GLOBAL
 
 
 ------------------------------------------------------------------------------

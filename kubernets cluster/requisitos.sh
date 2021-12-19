@@ -6,7 +6,16 @@ unameOut="$(uname -s)"
 # Fazer as instalações dos pre-requisitos consoante o sistema operativo
 case "${unameOut}" in
     Linux*)
-        machine=Linux;;
+        machine=Linux
+
+        sudo dpkg --configure -a
+    
+        # Instalar ansible
+        sudo apt install ansible
+
+        # Alterar permissões da pasta com o projecto ansible
+        
+        ;;
     Darwin*)
         machine=Mac
         echo "Instalação do ansible em sistema macOs!"
