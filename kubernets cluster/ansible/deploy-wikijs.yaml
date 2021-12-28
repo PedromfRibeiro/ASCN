@@ -8,15 +8,15 @@
     - name: instalation ansible utility on ubuntu host
       shell: "{{ item }}"
       loop:
-        - ansible-galaxy collection install google.cloud 
-        - ansible-galaxy collection install community.kubernetes
-        - ansible-galaxy collection install cloud.common
-        - snap install google-cloud-sdk --classic
-        - apt install npm 
-        - apt install python3-pip
-        - pip install requests
-        - pip install kubernetes
-        - snap install kubectl --classic
+        - sudo ansible-galaxy collection install google.cloud 
+        - sudo ansible-galaxy collection install community.kubernetes
+        - sudo ansible-galaxy collection install cloud.common
+        - sudo snap install google-cloud-sdk --classic
+        - sudo apt install npm 
+        - sudo apt install python3-pip
+        - sudo pip install requests
+        - sudo pip install kubernetes
+        - sudo snap install kubectl --classic
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
     - name: instalation ansible utility on macOS host
       shell: "{{ item }}"
