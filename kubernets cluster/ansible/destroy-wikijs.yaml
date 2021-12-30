@@ -1,0 +1,15 @@
+---
+- name: destroy infra
+  hosts: localhost  
+  gather_facts: false # é necessário recolher dados sobre o host para poder saber quais os comandos a executar (em que sistema operativo)
+  environment:    
+    GOOGLE_CREDENTIALS: "{{ credentials_file }}"
+
+  #Não tenho a certeza se é necessário remover os outros componentes individualmente para ter uma remoção "saudável",
+  #de momento parece funcionar
+  roles:
+    #- destroy_postgres-database
+    #- destroy_wikijs-application  
+    - destroy_kubernets-cluster
+    - destroy_network-cluster
+    #- destroy_prometheus-monitoring
