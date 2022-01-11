@@ -50,7 +50,6 @@
                   protocol: TCP
                   name: wikijs
 
-
 - name: create HorizontalPodAutoscaler for wikijs
   kubernetes.core.k8s:
     state: present
@@ -59,16 +58,15 @@
       kind: HorizontalPodAutoscaler
       metadata:
         name: wikijs
-        namespace: default
+        namespace: wikijs
       spec:
         maxReplicas: 10
         minReplicas: 1
         scaleTargetRef:
-          apiVersion: extensions/v1beta1
+          apiVersion: apps/v1
           kind: Deployment
           name: wikijs
         targetCPUUtilizationPercentage: 90
-
 
 - name: create service to give external access to wikijs app
   kubernetes.core.k8s:

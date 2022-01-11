@@ -22,6 +22,8 @@
       shell: "{{ item }}"
       loop:
         - brew install --cask google-cloud-sdk
+        - brew install kubectl
+        - brew install docker
       when: ansible_distribution == 'MacOSX'
 
   roles:    

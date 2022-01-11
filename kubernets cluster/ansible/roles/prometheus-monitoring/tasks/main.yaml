@@ -20,7 +20,7 @@
 
 
 - name: create prometheus grafana
-  shell: kubectl create -n monitoring -f ./tasks/grafana/
+  shell: kubectl apply -n monitoring -f ./tasks/grafana/
   args:
     chdir: "{{role_path}}"
 
